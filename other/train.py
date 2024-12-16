@@ -1,7 +1,7 @@
 import pandas as pd
 import random
 
-df = pd.read_csv('data/all_regions_trimmed_1000.csv')
+df = pd.read_csv('../data/all_regions_trimmed_1000.csv')
 
 useful_columns = ['year', 'mileage', 'power', 'engineDisplacement', 'fuelType', 'bodyType', 'brand', 'price']
 df = df[useful_columns]
