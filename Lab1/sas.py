@@ -23,6 +23,10 @@ result2 = multiply_matrix_by_scalar(matrix2, scalar)
 result11 = result1 + 5
 result22 = result2 + 5
 
+result33 = matrix * matrix2
+
+print(result33)
+
 print(result1)
 print(result11)
 print(result2)

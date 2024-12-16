@@ -1,25 +1,26 @@
 import numpy as np
-from computeCost import computeCost
+from Lab1.computeCost import computeCost
 
 def gradientDescent(x, y, theta, alpha, num_iters):
-    m = len(y)
+    m = len(y)  # Количество обучающих примеров
     J_history = np.zeros(num_iters)  # Массив для хранения значений функции стоимости
 
     for i in range(num_iters):
-        predictions = theta[0] + theta[1] * x  # Предсказания модели
-        theta[0] = theta[0] - (alpha / m) * np.sum(predictions - y)  # Обновление theta_0
-        theta[1] = theta[1] - (alpha / m) * np.sum((predictions - y) * x)  # Обновление theta_1
-        J_history[i] = computeCost(x, y, theta)  # Запись значения ошибки на текущей итерации
+
+        delta_0 = 0
+        delta_1 = 0
+
+        for j in range(m):
+            prediction = theta[0] + theta[1] * x[j]  # Предсказание для j-го примера
+            error = prediction - y[j]  # Ошибка для j-го примера
+            delta_0 += error  # Накопление ошибки для theta_0
+            delta_1 += error * x[j]  # Накопление ошибки для theta_1
+
+        # Обновление параметров theta
+        theta[0] = theta[0] - (alpha / m) * delta_0
+        theta[1] = theta[1] - (alpha / m) * delta_1
+
+        # Запись текущего значения функции стоимости
+        J_history[i] = computeCost(x, y, theta)
 
     return theta, J_history
-
-# def gradientDescent(X, y, theta, alpha, num_iters):
-#     m = len(y)
-#     J_history = np.zeros(num_iters)  # Массив для хранения значений функции стоимости
-#
-#     for i in range(num_iters):
-#         prediction = X.dot(theta)  # Предсказания модели
-#         theta = theta - (alpha / m) * X.T.dot(prediction - y)  # Обновление параметров theta
-#         J_history[i] = computeCost(X, y, theta)  # Запись значения ошибки на текущей итерации
-#
-#     return theta, J_history

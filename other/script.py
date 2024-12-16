@@ -1,10 +1,10 @@
 import pandas as pd
 
 # Путь к исходному файлу
-input_file_path = 'data/all_regions.csv'
+input_file_path = '../data/all_regions.csv'
 
 # Путь для сохранения нового файла
-output_file_path = 'data/all_regions_trimmed_1000000.csv'
+output_file_path = '../data/all_regions_trimmed_1000000.csv'
 
 # Загрузка всего CSV файла
 df = pd.read_csv(input_file_path)
