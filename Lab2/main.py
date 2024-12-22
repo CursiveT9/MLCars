@@ -12,12 +12,12 @@ X_norm, mu, sigma = tools.feature_normalize(X)
 X_norm = np.c_[np.ones(m), X_norm]  # Добавляем единичный столбец для theta_0
 
 # Параметры для градиентного спуска
-alpha = 0.01  # Начальная скорость обучения
-num_iters = 5000
+alpha = 1
+num_iters = 50
 theta = np.zeros(3)
 
 # Выполнение градиентного спуска
-theta, J_history = tools.gradient_descent(X_norm, y, theta, alpha, num_iters)
+theta, J_history = tools.gradientDescent(X_norm, y, theta, alpha, num_iters)
 
 # Вывод результатов
 print("=== Результаты методом градиентного спуска ===")

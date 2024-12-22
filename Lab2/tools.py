@@ -9,28 +9,24 @@ def feature_normalize(X):
     X_norm = (X - mu) / sigma
     return X_norm, mu, sigma
 
-
-def compute_cost(X, y, theta):
-    """Вычисляет функцию стоимости для линейной регрессии."""
+def computeCost(X, y, theta):
     m = len(y)
     predictions = X @ theta
-    sq_errors = (predictions - y) ** 2
-    J = (1 / (2 * m)) * np.sum(sq_errors)
-    return J
+    errors = predictions - y
+    cost = (1 / (2 * m)) * np.dot(errors, errors)
+    return cost
 
-
-def gradient_descent(X, y, theta, alpha, num_iters):
-    """Выполняет градиентный спуск для оптимизации параметров."""
+def gradientDescent(X, y, theta, alpha, num_iters):
     m = len(y)
-    J_history = []
+    J_history = np.zeros(num_iters)
 
-    for _ in range(num_iters):
-        error = (X @ theta) - y
-        theta -= (alpha / m) * (X.T @ error)
-        J_history.append(compute_cost(X, y, theta))
+    for i in range(num_iters):
+        # Векторизованное обновление параметров
+        errors = X @ theta - y
+        theta -= (alpha / m) * (X.T @ errors)
+        J_history[i] = computeCost(X, y, theta)
 
     return theta, J_history
-
 
 def normal_equation(X, y):
     """Выполняет аналитическое решение для нахождения параметров."""
