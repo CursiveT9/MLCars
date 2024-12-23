@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# Мин-макс нормализация
 def feature_normalize(X):
     """Нормализует признаки, возвращает нормализованные данные, среднее и стандартное отклонение."""
     mu = np.mean(X, axis=0)
