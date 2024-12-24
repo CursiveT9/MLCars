@@ -1,13 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Мин-макс нормализация
 def feature_normalize(X):
     """Нормализует признаки, возвращает нормализованные данные, среднее и стандартное отклонение."""
     mu = np.mean(X, axis=0)
     sigma = np.std(X, axis=0)
     X_norm = (X - mu) / sigma
     return X_norm, mu, sigma
+
+# def feature_normalize(X):
+#     mean, std = manual_mean_and_std(X)
+#     X_norm = (X - mean) / std
+#     return X_norm, mean, std
+#
+# def manual_mean_and_std(X):
+#     n = len(X)  # Количество элементов
+#     mean = np.sum(X) / n  # Среднее
+#     std_dev = np.sqrt(np.sum((X - mean) ** 2) / n) # Стандартная
+#     return mean, std_dev
 
 def computeCost(X, y, theta):
     m = len(y)

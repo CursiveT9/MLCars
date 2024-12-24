@@ -3,7 +3,7 @@ import random
 import cvreader
 
 # Путь к изображению
-image_path = 'image7.png'
+image_path = 'image9.png'
 
 # Создаем объект CVReader
 cv_reader = cvreader.CVReader(image_path)
