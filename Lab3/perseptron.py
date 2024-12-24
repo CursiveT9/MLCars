@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import random
 import cvreader
 
+# Система ИИ решающая проблему разделения двух множеств крестики-нолики
+
 # Путь к изображению
 image_path = 'image9.png'
 
@@ -30,13 +32,27 @@ print(weights)
 
 # Правило Хебба
 def train_perceptron(data, weights):
+    iteration = 0
     is_converged = False
     while not is_converged:
+        iteration += 1
+        print(f"\nИтерация {iteration}")
+        print("Класс | x0  | x1    | x2    | w0     | w1     | w2     | z      | y  | Верно?")
+        print("-" * 80)
+
         is_converged = True
         for x0, x1, x2, y_true in data:
             z = weights[0] * x0 + weights[1] * x1 + weights[2] * x2
             y_pred = 1 if z >= 0 else 0
-            if y_pred != y_true:
+            is_correct = y_pred == y_true
+
+            # Форматирование для отображения класса
+            class_label = '+' if y_true == 1 else '-'
+
+            # Вывод текущей строки таблицы
+            print(f"   {class_label}  | {x0:3} | {x1:5.2f} | {x2:5.2f} | {weights[0]:6.2f} | {weights[1]:6.2f} | {weights[2]:6.2f} | {z:6.2f} |  {y_pred} |  {'+' if is_correct else '-'}")
+
+            if not is_correct:
                 is_converged = False
                 if y_pred == 0:
                     weights[0] += x0
@@ -46,6 +62,7 @@ def train_perceptron(data, weights):
                     weights[0] -= x0
                     weights[1] -= x1
                     weights[2] -= x2
+
     return weights
 
 

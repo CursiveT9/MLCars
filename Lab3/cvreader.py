@@ -4,11 +4,13 @@ import numpy as np
 
 class CVReader:
     def __init__(self, image_path):
+        # Загружаем изображение и переводим его в цветовое пространство HSV
         self.image = cv2.imread(image_path)
         self.hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
         self.origin_x = 0
         self.origin_y = 0
 
+    # Метод для поиска пересечения осей
     def find_axis_intersection(self):
         # Диапазоны для черного цвета (оси)
         black_lower = np.array([0, 0, 0])
