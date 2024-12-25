@@ -106,3 +106,30 @@ def plot_predictions_comparison2(y, X, pred_gd, pred_analytic):
 
     ax.legend()
     plt.show()
+
+
+# График двух признаков (нормализованные и исходные данные)
+def plot_features_comparison(X_original, X_normalized):
+    plt.figure(figsize=(14, 6))
+
+    # График исходных данных
+    plt.subplot(1, 2, 1)
+    plt.scatter(X_original[:, 0], X_original[:, 1], c='blue', alpha=0.7, edgecolor='k', label="Исходные данные")
+    plt.title("Исходные данные (ненормализованные)", fontsize=14)
+    plt.xlabel("Признак 1 (Обороты двигателя)", fontsize=12)
+    plt.ylabel("Признак 2 (Количество передач)", fontsize=12)
+    plt.grid(True)
+    plt.legend()
+
+    # График нормализованных данных
+    plt.subplot(1, 2, 2)
+    plt.scatter(X_normalized[:, 1], X_normalized[:, 2], c='red', alpha=0.7, edgecolor='k',
+                label="Нормализованные данные")
+    plt.title("Нормализованные данные", fontsize=14)
+    plt.xlabel("Признак 1 (нормализованный)", fontsize=12)
+    plt.ylabel("Признак 2 (нормализованный)", fontsize=12)
+    plt.grid(True)
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()

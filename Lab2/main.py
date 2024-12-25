@@ -52,3 +52,7 @@ tools.plot_predictions_comparison(y, X, pred_gd, pred_analytic)
 
 # График сравнения предсказаний с наложением
 tools.plot_predictions_comparison2(y, X, pred_gd, pred_analytic)
+
+# График сравнения нормализованных признаков
+tools.plot_features_comparison(X, X_norm)
+
