@@ -56,3 +56,29 @@ tools.plot_predictions_comparison2(y, X, pred_gd, pred_analytic)
 # График сравнения нормализованных признаков
 tools.plot_features_comparison(X, X_norm)
 
+
+# Функция для предсказания цены на основе введённых данных
+def predict_price(theta, mu, sigma):
+    while True:
+        try:
+            print("\nВведите данные для предсказания:")
+            x1 = float(input("  Обороты двигателя (x1): "))
+            x2 = float(input("  Количество передач (x2): "))
+
+            # Нормализация введённых данных
+            x1_norm = (x1 - mu[0]) / sigma[0]
+            x2_norm = (x2 - mu[1]) / sigma[1]
+
+            # Создание вектора входных данных с учётом theta_0
+            X_input = np.array([1, x1_norm, x2_norm])
+
+            # Предсказание цены
+            predicted_price = X_input @ theta
+            print(f"\nПредсказанная цена: {predicted_price:.2f}")
+        except ValueError:
+            print("Ошибка ввода! Пожалуйста, введите числовые значения.")
+
+
+# Вызов функции предсказания
+predict_price(theta, mu, sigma)
+
