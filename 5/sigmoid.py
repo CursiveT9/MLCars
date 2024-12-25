@@ -46,32 +46,35 @@ print("Значения сигмоиды в точках:")
 for x, val in zip(x_values, sigmoid_values):
     print(f"sigmoid({x}) = {val}")
 
-x = np.linspace(-7, 7, 400)
+x = np.linspace(-5, 5, 400)
 
 plt.figure(figsize=(10, 5))
 
 plt.subplot(1, 2, 1)
-plt.plot(x, sigmoid(x), label="Сигмоида", color='blue')
-plt.plot(x, sigmoid_derivative(x), label="Производная сигмоиды", linestyle='--', color='orange')
+plt.plot(x, sigmoid(x), label="Сигмоида", color='red')
+plt.plot(x, sigmoid_derivative(x), label="Производная сигмоиды", linestyle='--', color='blue')
 plt.title("Сигмойда и его производная")
 plt.legend()
 plt.grid(True)
-plt.ylim(-1.1, 1.1)
-plt.xticks(np.arange(-7, 8, 1))
+plt.ylim(-1.5, 1.5)
+plt.xticks(np.arange(-5, 6, 1))
+plt.yticks(np.arange(-1.5, 2, 0.5))
 
 plt.subplot(1, 2, 2)
-plt.plot(x, sinh(x), label="Sinh", color='red')
-plt.plot(x, cosh(x), label="Cosh", color='blue')
-plt.plot(x, tanh(x), label="Tanh", color='green')
-plt.plot(x, tanh_derivative(x), label="Произв. tanh", linestyle='--', color='red')
+plt.plot(x, sinh(x), label="Sinh", color='green')
+plt.plot(x, cosh(x), label="Cosh", color='brown')
+plt.plot(x, tanh(x), label="Tanh", color='violet')
+plt.plot(x, tanh_derivative(x), label="Производная tanh", linestyle='--', color='blue')
 plt.title("Гиперболического тангенс и его производная")
 plt.legend()
 plt.grid(True)
 plt.ylim(-5, 5)
 plt.xticks(np.arange(-7, 8, 1))
+plt.yticks(np.arange(-5, 6, 1))
 
 plt.tight_layout()
 plt.show()
+
 
 
 
