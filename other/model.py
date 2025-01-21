@@ -9,10 +9,10 @@ df = pd.read_csv(data_path)
 
 # Шаг 2: Предварительная обработка
 df = df.dropna(subset=['price'])  # Убираем строки без цены
-df = df.drop(columns=['name', 'location', 'link', 'description', 'parse_date'])  # Убираем ненужные столбцы
+df = df.drop(columns=['link', 'description', 'parse_date'])  # Убираем ненужные столбцы
 
 # Преобразуем категориальные переменные в числовые
-df = pd.get_dummies(df, columns=['brand', 'bodyType', 'color', 'fuelType', 'transmission', 'vehicleConfiguration', 'engineName'], drop_first=True)
+df = pd.get_dummies(df, columns=['brand', 'name', 'bodyType', 'color', 'fuelType', 'transmission', 'vehicleConfiguration', 'engineName', 'location'], drop_first=True)
 
 # Шаг 3: Выбор признаков и целевой переменной
 X = df[['year', 'mileage', 'power', 'engineDisplacement'] + [col for col in df.columns if 'brand_' in col or 'bodyType_' in col]]
