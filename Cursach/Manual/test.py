@@ -12,10 +12,13 @@ category_mappings = model_data['category_mappings']
 mean_values = model_data['mean_values']
 std_values = model_data['std_values']
 
-# Определение функции predict
-# Функция для предсказания вероятности с использованием сигмоидной функции
+# Сигмоидная функция (функция активации)
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Предсказание вероятности
 def predict(X, weights):
-    return 1 / (1 + np.exp(-np.dot(X, weights)))  # Сигмоидная функция
+    return sigmoid(np.dot(X, weights))
 
 # 333000
 # 340000

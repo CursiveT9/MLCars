@@ -19,7 +19,7 @@ X = data.drop(columns=['price', 'is_expensive'])
 y = data['is_expensive']
 
 # Разделение данных на обучающую и тестовую выборки
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # Определение категориальных и числовых столбцов
 categorical_columns = X.select_dtypes(include=[object]).columns
