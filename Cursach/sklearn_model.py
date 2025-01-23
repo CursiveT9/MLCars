@@ -11,10 +11,6 @@ import joblib
 # Загрузка данных
 data = pd.read_csv('../data/all_regions_trimmed_400000.csv')
 
-# Заполнение пропущенных значений в числовых столбцах средними значениями
-numeric_columns = data.select_dtypes(include=[np.number]).columns
-data[numeric_columns] = data[numeric_columns].fillna(data[numeric_columns].mean())
-
 # Создание бинарной целевой переменной (1 — цена > 1 000 000, 0 — цена <= 1 000 000)
 data['is_expensive'] = (data['price'] > 1000000).astype(int)
 
