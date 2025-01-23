@@ -1,9 +1,10 @@
 import joblib
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Загрузка данных
-data = pd.read_csv('../../data/all_regions_trimmed_100000.csv')
+data = pd.read_csv('../../data/all_regions_trimmed_400000.csv')
 
 # Заполнение пропущенных значений в числовых столбцах средними значениями
 numeric_columns = data.select_dtypes(include=[np.number]).columns
@@ -22,17 +23,16 @@ data['mileage'] = data['mileage'].astype(float)
 data['power'] = data['power'].astype(float)
 data['engineDisplacement'] = data['engineDisplacement'].astype(float)
 
-# Целевая переменная — цена
-y = data['price']
+# Создание бинарной целевой переменной (1 — цена > 1 000 000, 0 — цена <= 1 000 000)
+data['is_expensive'] = (data['price'] > 1000000).astype(int)
 
 # Отделение признаков от целевой переменной
-X = data.drop(columns=['price'])
+X = data.drop(columns=['price', 'is_expensive'])
+y = data['is_expensive']
 
 # Нормализация данных
 mean_values = X.mean()  # Среднее значение по каждому столбцу
 std_values = X.std()    # Стандартное отклонение по каждому столбцу
-
-# Нормализуем данные
 X = (X - mean_values) / std_values
 
 # Разделение данных на обучающую и тестовую выборки
@@ -40,16 +40,26 @@ train_size = int(0.8 * len(data))
 X_train, X_test = X[:train_size], X[train_size:]
 y_train, y_test = y[:train_size], y[train_size:]
 
-# Линейная регрессия
-def predict(X, weights):
-    return np.dot(X, weights)
+# Добавление столбца единиц для смещения (базовый уровень)
+X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
+X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
 
+# Сигмоидная функция
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Предсказание вероятности
+def predict(X, weights):
+    return sigmoid(np.dot(X, weights))
+
+# Функция стоимости (логистическая потеря)
 def cost_function(X, y, weights):
     m = len(y)
     predictions = predict(X, weights)
-    cost = (1/(2 * m)) * np.sum((predictions - y) ** 2)
+    cost = (-1/m) * np.sum(y * np.log(predictions) + (1 - y) * np.log(1 - predictions))
     return cost
 
+# Градиентный спуск для логистической регрессии
 def gradient_descent(X, y, weights, learning_rate, iterations):
     m = len(y)
     cost_history = np.zeros(iterations)
@@ -61,15 +71,11 @@ def gradient_descent(X, y, weights, learning_rate, iterations):
 
     return weights, cost_history
 
-# Добавление столбца единиц для смещения (базовый уровень)
-X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
-X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
-
 # Инициализация весов
 weights = np.zeros(X_train.shape[1])
 
 # Обучение модели
-weights, cost_history = gradient_descent(X_train, y_train, weights, learning_rate=0.01, iterations=1000)
+weights, cost_history = gradient_descent(X_train, y_train, weights, learning_rate=0.1, iterations=700)
 
 # Сохранение модели и всех необходимых объектов
 model_data = {
@@ -80,18 +86,18 @@ model_data = {
 }
 
 # Сохранение всех объектов в одном файле
-joblib.dump(model_data, 'full_model.pkl')
+joblib.dump(model_data, 'logistic_model.pkl')
 
 # Предсказания на тестовой выборке
 y_pred = predict(X_test, weights)
+y_pred_class = (y_pred >= 0.5).astype(int)  # Преобразование вероятностей в классы
 
-# Оценка модели (среднеквадратичная ошибка)
-mse = np.mean((y_pred - y_test) ** 2)
-print(f"Mean Squared Error: {mse:.2f}")
+# Оценка модели (точность)
+accuracy = np.mean(y_pred_class == y_test)
+print(f"Точность модели: {accuracy * 100:.2f}%")
 
 # График сходимости функции стоимости
-import matplotlib.pyplot as plt
-plt.plot(range(1000), cost_history)
+plt.plot(range(700), cost_history)
 plt.xlabel("Итерации")
 plt.ylabel("Функция стоимости")
 plt.title("Сходимость функции стоимости")

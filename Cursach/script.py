@@ -4,13 +4,13 @@ import pandas as pd
 input_file_path = '../data/all_regions.csv'
 
 # Путь для сохранения нового файла
-output_file_path = '../data/all_regions_trimmed_10000.csv'
+output_file_path = '../data/all_regions_trimmed_400000.csv'
 
 # Загрузка всего CSV файла
 df = pd.read_csv(input_file_path)
 
 # Удаление ненужных столбцов
-columns_to_drop = ['link', 'description', 'parse_date', 'date', 'vehicleConfiguration']
+columns_to_drop = ['link', 'description', 'parse_date', 'date', 'vehicleConfiguration', 'name', 'engineName']
 df = df.drop(columns=columns_to_drop, errors='ignore')
 
 # Преобразование столбца engineDisplacement
@@ -25,6 +25,6 @@ if 'engineDisplacement' in df.columns:
 df_cleaned = df.dropna()
 
 # Сохранение первых n строк в новый файл
-df_cleaned.head(10000).to_csv(output_file_path, index=False)
+df_cleaned.head(400000).to_csv(output_file_path, index=False)
 
 print(f"Файл с миллионом строк без пустых полей сохранен как {output_file_path}.")
