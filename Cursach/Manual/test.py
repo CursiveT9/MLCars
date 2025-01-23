@@ -20,6 +20,12 @@ def sigmoid(z):
 def predict(X, weights):
     return sigmoid(np.dot(X, weights))
 
+# 7000
+# 65000
+# 70000
+# 70000
+# 95000
+# 95000
 # 333000
 # 340000
 # 540000

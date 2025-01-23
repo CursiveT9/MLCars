@@ -4,6 +4,12 @@ import pandas as pd
 # Загрузка сохранённой модели
 model = joblib.load('logistic_model_sklearn.pkl')
 
+# 7000
+# 65000
+# 70000
+# 70000
+# 95000
+# 95000
 # 333000
 # 340000
 # 540000
