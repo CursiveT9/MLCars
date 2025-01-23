@@ -93,7 +93,7 @@ def gradient_descent(X, y, weights, learning_rate, iterations):
 weights = np.zeros(X_train.shape[1])
 
 # Выполняем градиентный спуск для обучения модели
-weights, cost_history = gradient_descent(X_train, y_train, weights, learning_rate=0.1, iterations=700)
+weights, cost_history = gradient_descent(X_train, y_train, weights, learning_rate=5, iterations=100)
 
 # Создаем словарь для хранения модели и других необходимых данных
 model_data = {
@@ -116,7 +116,7 @@ accuracy = np.mean(y_pred_class == y_test)
 print(f"Точность модели: {accuracy * 100:.2f}%")
 
 # Строим график изменения функции стоимости в процессе обучения
-plt.plot(range(700), cost_history)
+plt.plot(range(100), cost_history)
 plt.xlabel("Итерации")
 plt.ylabel("Функция стоимости")
 plt.title("Сходимость функции стоимости")
