@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Lab2.normalize import z_score_normalization
-
 # Загрузка данных из CSV-файла
 data = pd.read_csv('../../data/all_regions_trimmed_400000.csv')
 
@@ -35,6 +33,18 @@ X = data.drop(columns=['price', 'is_expensive'])
 y = data['is_expensive']
 
 # Нормализация по среднему и стандартному отклонению (z-score normalization)
+def z_score_normalization(X):
+    mean, std = manual_mean_and_std(X)
+    X_norm = (X - mean) / std
+    return X_norm, mean, std
+
+def manual_mean_and_std(X):
+    n = len(X)  # Количество элементов
+    mean = np.sum(X) / n  # Среднее
+    std_dev = np.sqrt(np.sum((X - mean) ** 2) / n) # Стандартное отклонение
+    return mean, std_dev
+
+# Нормализация по среднему и стандартному отклонению (z-score normalization)
 X, mean_values, std_values = z_score_normalization(X)
 
 # Разделение данных на обучающую и тестовую выборки
@@ -46,18 +56,6 @@ y_train, y_test = y[:train_size], y[train_size:]
 # Добавление столбца
 X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
 X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
-
-# Нормализация по среднему и стандартному отклонению (z-score normalization)
-def z_score_normalization(X):
-    mean, std = manual_mean_and_std(X)
-    X_norm = (X - mean) / std
-    return X_norm, mean, std
-
-def manual_mean_and_std(X):
-    n = len(X)  # Количество элементов
-    mean = np.sum(X) / n  # Среднее
-    std_dev = np.sqrt(np.sum((X - mean) ** 2) / n) # Стандартное отклонение
-    return mean, std_dev
 
 # Сигмоидная функция (функция активации)
 def sigmoid(z):

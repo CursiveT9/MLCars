@@ -36,7 +36,7 @@ preprocessor = ColumnTransformer(
 # Создание пайплайна для модели
 model = Pipeline(steps=[
     ('preprocessor', preprocessor),
-    ('classifier', LogisticRegression(solver='liblinear', max_iter=1000))  # Логистическая регрессия
+    ('classifier', LogisticRegression(solver='liblinear', max_iter=30))  # Логистическая регрессия
 ])
 
 # Обучение модели
