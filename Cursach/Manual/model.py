@@ -59,6 +59,7 @@ X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
 
 # Сигмоидная функция (функция активации)
 def sigmoid(z):
+    z = np.clip(z, -500, 500)
     return 1 / (1 + np.exp(-z))
 
 # Предсказание вероятности
@@ -67,9 +68,11 @@ def predict(X, weights):
 
 # Функция для вычисления стоимости (ошибки) модели
 def cost_function(X, y, weights):
-    m = len(y)  # Количество примеров в выборке
-    predictions = predict(X, weights)  # Предсказанные вероятности
-    # Вычисляем логистическую потерю
+    m = len(y)
+    predictions = predict(X, weights)
+    # Ограничиваем predictions для избежания log(0)
+    epsilon = 1e-15
+    predictions = np.clip(predictions, epsilon, 1 - epsilon)
     cost = (-1/m) * np.sum(y * np.log(predictions) + (1 - y) * np.log(1 - predictions))
     return cost
 
