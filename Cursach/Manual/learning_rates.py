@@ -1,0 +1,117 @@
+import joblib
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Загрузка данных из CSV-файла
+data = pd.read_csv('../../data/all_regions_trimmed_400000.csv')
+
+# Выбираем все столбцы с типом данных object (категориальные данные)
+categorical_columns = data.select_dtypes(include=[object]).columns
+# Создаем словарь для хранения соответствий между категориями и их числовыми кодами
+category_mappings = {}
+# Проходим по каждому категориальному столбцу
+for col in categorical_columns:
+    # Преобразуем категории в числовые коды и сохраняем соответствия
+    data[col], mapping = pd.factorize(data[col])
+    category_mappings[col] = mapping
+
+# Преобразование года, пробега и мощности в числовые значения
+data['year'] = data['year'].astype(float)
+data['mileage'] = data['mileage'].astype(float)
+data['power'] = data['power'].astype(float)
+data['engineDisplacement'] = data['engineDisplacement'].astype(float)
+
+# Создание бинарной целевой переменной
+# Если цена больше 1 000 000, то значение 1, иначе 0
+data['is_expensive'] = (data['price'] > 1000000).astype(int)
+
+# Отделение признаков от целевой переменной
+# Убираем столбцы 'price' и 'is_expensive' из признаков (X)
+X = data.drop(columns=['price', 'is_expensive'])
+# Целевая переменная (y) — это столбец 'is_expensive'
+y = data['is_expensive']
+
+# Нормализация по среднему и стандартному отклонению (z-score normalization)
+def z_score_normalization(X):
+    mean, std = manual_mean_and_std(X)
+    X_norm = (X - mean) / std
+    return X_norm, mean, std
+
+def manual_mean_and_std(X):
+    n = len(X)  # Количество элементов
+    mean = np.sum(X) / n  # Среднее
+    std_dev = np.sqrt(np.sum((X - mean) ** 2) / n) # Стандартное отклонение
+    return mean, std_dev
+
+# Нормализация по среднему и стандартному отклонению (z-score normalization)
+X, mean_values, std_values = z_score_normalization(X)
+
+# Разделение данных на обучающую и тестовую выборки
+train_size = int(0.8 * len(data))
+# Разделяем данные на обучающую и тестовую выборки
+X_train, X_test = X[:train_size], X[train_size:]
+y_train, y_test = y[:train_size], y[train_size:]
+
+# Добавление столбца
+X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
+X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
+
+# Сигмоидная функция (функция активации)
+def sigmoid(z):
+    z = np.clip(z, -500, 500)
+    return 1 / (1 + np.exp(-z))
+
+# Предсказание вероятности
+def predict(X, weights):
+    return sigmoid(np.dot(X, weights))
+
+# Функция для вычисления стоимости (ошибки) модели
+def cost_function(X, y, weights):
+    m = len(y)
+    predictions = predict(X, weights)
+    # Ограничиваем predictions для избежания log(0)
+    epsilon = 1e-15
+    predictions = np.clip(predictions, epsilon, 1 - epsilon)
+    cost = (-1/m) * np.sum(y * np.log(predictions) + (1 - y) * np.log(1 - predictions))
+    return cost
+
+# Функция для оптимизации весов модели с использованием градиентного спуска
+def gradient_descent(X, y, weights, learning_rate, iterations):
+    m = len(y)  # Количество примеров в выборке
+    cost_history = np.zeros(iterations)  # Массив для хранения истории стоимости
+
+    for i in range(iterations):
+        predictions = predict(X, weights)  # Предсказанные вероятности
+        # Обновляем веса с использованием градиента
+        weights -= (learning_rate/m) * np.dot(X.T, predictions - y)
+        # Сохраняем текущее значение функции стоимости
+        cost_history[i] = cost_function(X, y, weights)
+
+    return weights, cost_history
+
+# Инициализация весов
+weights = np.zeros(X_train.shape[1])
+
+# Список значений learning_rate (альфа) для сравнения
+learning_rates = [0.001, 0.01, 0.1, 1, 5, 10]
+
+# Создаем график для визуализации сходимости функции стоимости
+plt.figure(figsize=(10, 6))
+
+# Проходим по каждому значению learning_rate
+for lr in learning_rates:
+    # Инициализация весов
+    weights = np.zeros(X_train.shape[1])
+    # Выполняем градиентный спуск
+    weights, cost_history = gradient_descent(X_train, y_train, weights, learning_rate=lr, iterations=100)
+    # Строим график для текущего learning_rate
+    plt.plot(range(100), cost_history, label=f'LR = {lr}')
+
+# Настройка графика
+plt.xlabel("Итерации")
+plt.ylabel("Функция стоимости")
+plt.title("Сходимость функции стоимости для разных learning_rate")
+plt.legend()
+plt.grid()
+plt.show()

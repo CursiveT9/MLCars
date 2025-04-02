@@ -28,6 +28,8 @@ if 'engineDisplacement' in df.columns:
 df_cleaned = df.dropna()  # Строки без пустых полей
 df_missing = df[df.isna().any(axis=1)]  # Строки с пустыми полями
 
+df_cleaned = df_cleaned.sample(frac=1)
+
 # Сохранение первых 400 000 строк без пустых полей в новый файл
 df_cleaned.head(400000).to_csv(output_file_path, index=False)
 
